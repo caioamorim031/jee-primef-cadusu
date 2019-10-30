@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+	
+	<script type="text/javascript">
+    function handleLoginRequest(xhr, status, args) {
+        if(args.validationFailed || !args.loggedIn) {
+            PF('dlg').jq.effect("shake", {times:5}, 100);
+        }
+        else {
+            PF('dlg').hide();
+            $('#loginLink').fadeOut();
+        }
+    }
+	</script>
+	
+	<ui:insert name="title">
+            <title>Cadastro de Usuários</title>
+        </ui:insert>
+        
+        <h:outputStylesheet library="webjars"
+		name="/bootstrap/4.3.1/css/bootstrap.css" />
+		
+		<!--h:outputStylesheet library="css" name="../../css/biblioteca_padrao.css"  /-->
+		<link rel="StyleSheet" type="text/css" href="../../css/biblioteca_padrao.css" />
+		        
+        <ui:insert name="head" />
+	
+	</h:head>
+	
+	<h:body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  <a class="navbar-brand teste" href="#">Cadastro de Usuários</a>
+	  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+		  <ui:fragment rendered="#{usuarioBean.isLogado()}">
+		  
+			<ul class="navbar-nav">
+		      <li class="nav-item active">
+		        <a class="nav-link" href="#">Consultar<span class="sr-only">(current)</span></a>
+		      </li>
+		      <li class="nav-item">
+		        <a class="nav-link" href="#">Adicionar</a>
+		      </li>
+		      <li class="nav-item">
+		        <a class="nav-link" href="#">Excluir</a>
+		      </li>
+	      
+	   		 </ul>  
+		  
+		  </ui:fragment>
+	    
+	  </div>
+	  <h:form class="form-inline my-2 my-lg-0" rendered="#{not usuarioBean.isLogado()}">
+      <p:button class="btn btn-primary" value="Login" href="javascript:void(0)" onclick="PF('dlg').show();"></p:button>
+    </h:form>
+	</nav>
+	<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+     
+    <p:dialog header="Login" widgetVar="dlg" resizable="false">
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="username" value="Usuário:" />
+            <p:inputText id="username" value="#{usuarioBean.usuario.email}" required="true" label="username" />
+             
+            <h:outputLabel for="password" value="Senha:" />
+            <p:password id="password" value="#{usuarioBean.usuario.senha}" required="true" label="password" />
+             
+            <f:facet name="footer">
+                <p:commandButton value="Login" update="growl" actionListener="#{usuarioBean.doLogin()}"
+                                 oncomplete="handleLoginRequest(xhr, status, args)" />
+            </f:facet>  
+        </h:panelGrid>
+    </p:dialog>  
+	<ui:insert name="body" />
+	<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <div class="container text-center">
+      <small>Desenvolvido por <b>Caio Amorim</b></small>
+    </div>
+  </footer>
+	
+	</h:body>
+	
+</html>
